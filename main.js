@@ -127,7 +127,7 @@ async function all() {
         score.innerHTML = Math.round(scoreSum)
 
         if (scoreSum > highscoreDisplay) {
-            highscoreDisplay = scoreSum
+            highscoreDisplay = Math.round(scoreSum)
             highscore.innerHTML = highscoreDisplay
             score.style.color = `hsl(${colorCursor}, 100%, 40%)`
             highscore.style.color = `#000`
