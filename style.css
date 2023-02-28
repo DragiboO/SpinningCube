@@ -32,6 +32,19 @@ body {
   font-size: 32px;
 }
 
+.reset {
+  position: absolute;
+  bottom: 5%;
+  right: 5%;
+  font-size: 16px;
+  color: #830000;
+  font-weight: bold;
+  z-index: 1000;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+}
+
 .center {
   position: relative;
   height: 10px;

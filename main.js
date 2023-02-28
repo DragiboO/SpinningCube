@@ -1,9 +1,25 @@
+let gameHighscore = localStorage.getItem('gameHighscore')
+
+if (gameHighscore === null) {
+    gameHighscore = 0
+    localStorage.setItem('gameHighscore', gameHighscore)
+}
+
 let score = document.querySelector('.score')
 let page = document.querySelector('body')
 let mouse = document.querySelector('.mouse')
 let mouseCircle = document.querySelector('.mouse_circle')
 let highscore = document.querySelector('.highscore')
 let center =  document.querySelector('.center')
+
+let reset = document.querySelector('.reset')
+
+reset.addEventListener('click', e => {
+    console.log('reset')
+    gameHighscore = 0
+    localStorage.setItem('gameHighscore', gameHighscore)
+    highscore.innerHTML = gameHighscore
+})
 
 let coordX = 0 
 let coordY = 0
@@ -12,8 +28,6 @@ let lastX = 0
 let lastY = 0
 
 let diffGlobal = 0
-
-let highscoreDisplay = 0
 
 let colorCursor = 0
 let colorItem = 0
@@ -88,6 +102,8 @@ function modifyColorString(colorString) {
     return modifiedString;
 }
 
+highscore.innerHTML = gameHighscore
+
 async function all() {
     while (true) {
 
@@ -126,9 +142,11 @@ async function all() {
         scoreSum = list.reduce((partialSum, a) => partialSum + a, 0);
         score.innerHTML = Math.round(scoreSum)
 
-        if (scoreSum > highscoreDisplay) {
-            highscoreDisplay = Math.round(scoreSum)
-            highscore.innerHTML = highscoreDisplay
+        if (scoreSum > gameHighscore) {
+            gameHighscore = Math.round(scoreSum)
+            highscore.innerHTML = gameHighscore
+            localStorage.setItem('gameHighscore', gameHighscore)
+
             score.style.color = `hsl(${colorCursor}, 100%, 40%)`
             highscore.style.color = `#000`
         } else {
