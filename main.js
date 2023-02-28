@@ -127,8 +127,13 @@ async function all() {
         score.innerHTML = Math.round(scoreSum)
 
         if (scoreSum > highscoreDisplay) {
-            highscoreDisplay = Math.round(scoreSum)
+            highscoreDisplay = scoreSum
             highscore.innerHTML = highscoreDisplay
+            score.style.color = `hsl(${colorCursor}, 100%, 40%)`
+            highscore.style.color = `#000`
+        } else {
+            score.style.color = `#000`
+            highscore.style.color = `hsl(${colorCursor}, 100%, 40%)`
         }
 
         scoreLoop += 0.7 + scoreSum / 3000
@@ -144,30 +149,30 @@ async function all() {
         //item.style.animationDuration = `${50 - scoreSum / 750}s`
 
         switch(true) {
-            case (scoreSum >= 0 && scoreSum < 5000 && colorItem == 0 && slowItem == 0):
+            case (scoreSum >= 0 && scoreSum < 10000 && colorItem == 0 && slowItem == 0):
                 item.style.backgroundColor = `hsl(60, 100%, 100%)`
                 break;
-            case (scoreSum >= 5000 && scoreSum < 10000 && colorItem == 0 && slowItem == 0):
-                item.style.backgroundColor = `hsl(60, 100%, ${interpolate(scoreSum, 5000, 10000, 100, 50)}%)`
+            case (scoreSum >= 10000 && scoreSum < 15000 && colorItem == 0 && slowItem == 0):
+                item.style.backgroundColor = `hsl(60, 100%, ${interpolate(scoreSum, 10000, 15000, 100, 50)}%)`
                 break;
-            case (scoreSum >= 10000 && scoreSum < 20000 && colorItem == 0 && slowItem == 0):
-                item.style.backgroundColor = `hsl(${interpolate(scoreSum, 10000, 20000, 60, 0)}, 100%, ${interpolate(scoreSum, 10000, 20000, 50, 40)}%)`
+            case (scoreSum >= 15000 && scoreSum < 25000 && colorItem == 0 && slowItem == 0):
+                item.style.backgroundColor = `hsl(${interpolate(scoreSum, 15000, 25000, 60, 0)}, 100%, ${interpolate(scoreSum, 15000, 25000, 50, 40)}%)`
                 item.style.boxShadow = ''
                 break;
-            case (scoreSum >= 20000 && scoreSum < 30000  && colorItem == 0 && slowItem == 0):
-                item.style.boxShadow = `0 0 ${interpolate(scoreSum, 20000, 30000, 0 ,100)}px 0 hsl(${interpolate(scoreSum, 20000, 30000, 30, 0)}, 100%, 50%)`
+            case (scoreSum >= 25000 && scoreSum < 35000  && colorItem == 0 && slowItem == 0):
+                item.style.boxShadow = `0 0 ${interpolate(scoreSum, 25000, 35000, 0 ,100)}px 0 hsl(${interpolate(scoreSum, 25000, 35000, 30, 0)}, 100%, 50%)`
                 break
-            case (scoreSum >= 30000 || colorItem != 0):
-                if (colorItem <= 0 && scoreSum >= 30000) {
+            case (scoreSum >= 35000 || colorItem != 0):
+                if (colorItem <= 0 && scoreSum >= 35000) {
                     colorItem = 360
                 }
                 console.log(colorItem)
                 item.style.backgroundColor = `hsl(${colorItem}, 100%, 40%)`
-                item.style.boxShadow = `0 0 ${interpolate(scoreSum, 30000, 40000, 100 ,200)}px 0 hsl(${colorItem}, 100%, 40%)`
+                item.style.boxShadow = `0 0 ${interpolate(scoreSum, 35000, 50000, 100 ,200)}px 0 hsl(${colorItem}, 100%, 40%)`
                 colorItem -= 1
                 slowItem = 1
                 break;
-            case (scoreSum < 30000 && colorItem == 0 && slowItem == 1):
+            case (scoreSum < 35000 && colorItem == 0 && slowItem == 1):
                 item.style.backgroundColor = `hsl(0, 100%, ${slowItemLight}%)`
                 item.style.boxShadow = ``
                 if (slowItemLight < 100) {
