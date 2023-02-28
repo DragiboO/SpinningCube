@@ -16,13 +16,13 @@ let diffGlobal = 0
 let highscoreDisplay = 0
 
 let colorCursor = 0
+let colorItem = 0
+let slowItem = 0
+let slowItemLight = 40
 
 let list = []
 let scoreSum = 0
-
-let line = 0
-
-let truc = 0
+let scoreLoop = 0
 
 let windowSize = {
     'width': window.innerWidth,
@@ -65,6 +65,10 @@ function listCoord(coord) {
         list.shift()
     }
     list.push(coord)
+}
+
+function interpolate(value, inMin, inMax, outMin, outMax) {
+    return ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
 }
 
 function modifyColorString(colorString) {
@@ -117,29 +121,63 @@ async function all() {
 
         getCoord()
         diffGlobal = Math.abs(coordX - lastX) + Math.abs(coordY - lastY)
-
         listCoord(diffGlobal)
 
         scoreSum = list.reduce((partialSum, a) => partialSum + a, 0);
-
         score.innerHTML = Math.round(scoreSum)
 
-        if (Math.round(scoreSum) > highscoreDisplay) {
+        if (scoreSum > highscoreDisplay) {
             highscoreDisplay = Math.round(scoreSum)
             highscore.innerHTML = highscoreDisplay
         }
 
-        truc += 0.7 + scoreSum / 3000
+        scoreLoop += 0.7 + scoreSum / 3000
 
-        if (truc > 3600) {
-            truc = 0
+        if (scoreLoop > 3600) {
+            scoreLoop = 0
         }
 
-        item.style.transform = `rotateZ(${truc * 0.8}deg)`
+        item.style.transform = `rotateZ(${scoreLoop * 0.8}deg)`
         item.style.borderRadius = `${scoreSum / 1200}px`
 
-        center.style.transform = `rotateZ(${-truc * 0.2}deg)`
+        center.style.transform = `rotateZ(${-scoreLoop * 0.2}deg)`
         //item.style.animationDuration = `${50 - scoreSum / 750}s`
+
+        switch(true) {
+            case (scoreSum >= 0 && scoreSum < 5000 && colorItem == 0 && slowItem == 0):
+                item.style.backgroundColor = `hsl(60, 100%, 100%)`
+                break;
+            case (scoreSum >= 5000 && scoreSum < 10000 && colorItem == 0 && slowItem == 0):
+                item.style.backgroundColor = `hsl(60, 100%, ${interpolate(scoreSum, 5000, 10000, 100, 50)}%)`
+                break;
+            case (scoreSum >= 10000 && scoreSum < 20000 && colorItem == 0 && slowItem == 0):
+                item.style.backgroundColor = `hsl(${interpolate(scoreSum, 10000, 20000, 60, 0)}, 100%, ${interpolate(scoreSum, 10000, 20000, 50, 40)}%)`
+                item.style.boxShadow = ''
+                break;
+            case (scoreSum >= 20000 && scoreSum < 30000  && colorItem == 0 && slowItem == 0):
+                item.style.boxShadow = `0 0 ${interpolate(scoreSum, 20000, 30000, 0 ,100)}px 0 hsl(${interpolate(scoreSum, 20000, 30000, 30, 0)}, 100%, 50%)`
+                break
+            case (scoreSum >= 30000 || colorItem != 0):
+                if (colorItem <= 0 && scoreSum >= 30000) {
+                    colorItem = 360
+                }
+                console.log(colorItem)
+                item.style.backgroundColor = `hsl(${colorItem}, 100%, 40%)`
+                item.style.boxShadow = `0 0 ${interpolate(scoreSum, 30000, 40000, 100 ,200)}px 0 hsl(${colorItem}, 100%, 40%)`
+                colorItem -= 1
+                slowItem = 1
+                break;
+            case (scoreSum < 30000 && colorItem == 0 && slowItem == 1):
+                item.style.backgroundColor = `hsl(0, 100%, ${slowItemLight}%)`
+                item.style.boxShadow = ``
+                if (slowItemLight < 100) {
+                    slowItemLight += 1
+                }
+                if (slowItemLight == 100) {
+                    slowItem = 0
+                    slowItemLight = 40
+                }
+        }
 
         lastX = coordX
         lastY = coordY
